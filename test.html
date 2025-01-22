@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Buttons</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: monospace;
+    }
+    #buttons {
+      position: absolute;
+      bottom: 300px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    #buttons button {
+      width: 200px;
+      height: 50px;
+      background: linear-gradient(to bottom, gray, darkgray);
+      color: ghostwhite;
+      font-size: 19px;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+  </style>
+</head>
+<body>
+  <div id="buttons">
+    <button>Button 1</button>
+    <button>Button 2</button>
+  </div>
+</body>
+</html>

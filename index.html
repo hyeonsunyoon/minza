@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>chill..</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<img src="bluesky.bmp" id="garden">
+	<img src="forest.bmp" id="forest">
+	<img src="space.bmp" id="space">
+
+
+
+	<div id="layer_speed" class="layer hidden UI">
+		<div id="basicUI_Speed">
+			<div id="ground"></div> <!-- 땅 -->
+				<p id="characterSpeaking">I know right ?!?!?</p>
+			</div>
+			<div id="inspector">
+				<p id="speed">Current Speed: <span id="speedValue">100</span></p>
+				<p id="description">The turtle is feeling <span id="status">happy</span>...</p>
+			</div>
+			<div id="buttons">
+				<button id="slowDown" onclick="changeSpeed('slow down')">Why don’t you slow down?</button>
+				<button id="speedUp" onclick="changeSpeed('speed up')">Wow! You so fast!</button>
+			</div>
+		</div>
+	</div>
+
+	<div id="layer_route" class="layer hidden UI">
+		<div id="basicUI_Route">
+			<div id="road"></div>
+			<div id="sky"></div>
+			<p id="progressingMessage">Re-searching the route</p>
+			<p id="debugPort">You just clicked the button</p>
+		</div>
+		<div id="risky">
+			<button onclick="changeBackground()" id="detour">Detour</button>
+			<p id="warnMessage">WARNING! If you click this button, the ETA will be uncalculatable.</p>
+		</div>
+	</div>
+
+	<div id="select" class="UI">
+		<div id="radios">
+			<label id="speedLabel">
+				<input type="radio" name="mode" id="speedRadio" value="Speed" /> Speed
+			</label>
+			<br>
+			<label id="routeLabel">
+				<input type="radio" name="mode" id="routeRadio" value="Route" /> Route
+			</label>
+		</div>
+		<div id="character"></div> <!-- 타원 (자라 캐릭터 단순화) -->
+	</div>
+
+
+
+
+<script>
+
+
+document.addEventListener("DOMContentLoaded", () => {
+	const radioSpeed = document.querySelector("input[type='radio'][value='Speed']");
+	const radioRoute = document.querySelector("input[type='radio'][value='Route']");
+	const layerSpeed = document.getElementById("layer_speed");
+	const layerRoute = document.getElementById("layer_route");
+
+    const speedInput = document.getElementById('speedRadio');
+    const routeInput = document.getElementById('routeRadio');
+    const speedLabel = document.getElementById('speedLabel');
+    const routeLabel = document.getElementById('routeLabel');
+
+
+	// 초기 상태 설정 (Speed 선택)
+	radioSpeed.checked = true;
+	layerSpeed.style.display = "block"; // Speed 레이어를 보이게 설정
+	layerRoute.style.display = "none"; // Route 레이어를 숨김
+
+	// 이벤트 리스너 설정
+	radioSpeed.addEventListener("change", () => {
+		if (radioSpeed.checked) {
+			layerSpeed.style.display = "block";
+			layerRoute.style.display = "none";
+			speedLabel.style.color = 'black';
+			routeLabel.style.color = 'black';
+		}
+	});
+
+	radioRoute.addEventListener("change", () => {
+		if (radioRoute.checked) {
+			layerSpeed.style.display = "none";
+			layerRoute.style.display = "block";
+			speedLabel.style.color = 'white';
+			routeLabel.style.color = 'white';
+		}
+	});
+
+
+
+
+});
+
+
+
+
+
+// Speed Radio
+
+let speed = 10; // Current speed
+let targetSpeed = speed; // Target speed to reach
+const statuses = ["fine", "meh", "nice", "burning out"];
+let intervalId; // For smooth transition
+let intervalTime = 50; // Initial transition speed (milliseconds)
+
+const speedText = document.getElementById('speed');
+let isRed = false;
+
+
+// Display initial speed and status
+document.getElementById('speedValue').innerHTML = speed;
+document.getElementById('status').innerHTML = statuses[0];
+
+
+setInterval(() => {
+    isRed = !isRed;
+    speedText.style.color = isRed ? 'red' : 'black';
+}, 500);
+
+
+function clickCounter() {
+    if (typeof Storage !== "undefined") {
+        if (localStorage.clickcount) {
+            localStorage.clickcount = Number(localStorage.clickcount) + 1;
+        } else {
+            localStorage.clickcount = 1;
+        }
+        // document.getElementById("result").innerHTML = `Button clicked: ${localStorage.clickcount} times`;
+    } else {
+        alert("Sorry, your browser does not support web storage...");
+    }
+}
+
+
+function statusCalc() {
+    if (speed < 30) return 0;
+    if (speed < 60) return 1;
+    if (speed < 100) return 2;
+    return 3;
+}
+
+function getBackgroundColor(statusIndex) {
+    const colors = ["greenyellow", "teal", "gold", "firebrick"];
+    return colors[statusIndex];
+}
+
+function smoothTransition() {
+    if (!intervalId) {
+        intervalId = setInterval(() => {
+            if (speed === targetSpeed) {
+                clearInterval(intervalId);
+                intervalId = null;
+                return;
+            }
+
+            // Calculate the step size based on the distance to targetSpeed
+            const distance = Math.abs(targetSpeed - speed);
+            const step = Math.max(1, Math.ceil(distance / 10)); // Gradual slowing as it gets closer
+
+            // Adjust speed towards targetSpeed
+            if (speed < targetSpeed) {
+                speed += step;
+                if (speed > targetSpeed) speed = targetSpeed; // Prevent overshooting
+            } else {
+                speed -= step;
+                if (speed < targetSpeed) speed = targetSpeed; // Prevent undershooting
+            }
+
+            document.getElementById('speedValue').innerHTML = speed;
+
+            // Update status and background color if needed
+            const currentStatus = statusCalc();
+            const bgColor = getBackgroundColor(currentStatus);
+            const turtle = document.getElementById('character');
+            if (turtle.style.backgroundColor !== bgColor) {
+                turtle.style.backgroundColor = bgColor;
+                document.getElementById('status').innerHTML = statuses[currentStatus];
+            }
+
+            // Dynamically adjust transition speed
+            intervalTime = Math.max(10, 100 - distance); // Faster when far, slower when close
+            clearInterval(intervalId); // Clear the old interval
+            intervalId = null;
+            smoothTransition(); // Restart with updated intervalTime
+        }, intervalTime);
+    }
+}
+
+function changeSpeed(action) {
+    if (action === "slow down") {
+        if (speed > 1) {
+            targetSpeed -= 1;
+            smoothTransition();
+            localStorage.clickcount = 0;
+            // document.getElementById("result").innerHTML = "";
+        } else {
+            alert("You can't slow down anymore!");
+        }
+    } else if (action === "speed up") {
+        clickCounter();
+        const clickCount = Number(localStorage.clickcount);
+        const factor = clickCount > 1 ? factorial(clickCount) : 10;
+        targetSpeed += 10 + factor; // Dynamically adjust target speed
+        smoothTransition();
+    }
+}
+
+function factorial(n) {
+    if (n <= 1) return 1;
+    return n * factorial(n - 1);
+}
+
+
+
+// Route Radio
+const backgroundDiv = document.getElementById("sky");
+const backgroundDown = document.getElementById("layer_route");
+const gardenImage = document.getElementById("garden");
+const forestImage = document.getElementById("forest");
+const spaceImage = document.getElementById("space");
+const button = document.getElementById("detour");
+const appleText = document.getElementById("progressingMessage");
+
+const image = document.getElementById('character');
+
+
+
+
+
+function toOriginal() {
+	backgroundDiv.style.backgroundImage = "none";
+	backgroundDown.style.backgroundImage = "none";
+	button.disabled = false; // Re-enable the button
+	hideMessage();
+}
+
+function DisableButton(button) {
+	document.getElementById(button).disabled = true;
+}
+
+function showMessage() {
+	appleText.style.display = "block"; // 글자 보이기
+}
+
+function hideMessage() {
+	appleText.style.display = "none"; // 글자 숨기기
+}
+
+
+
+function changeBackground() {
+
+	showMessage();
+	DisableButton("detour");
+
+
+	const image1Url = gardenImage.src;
+	const image2Url = forestImage.src;
+	const image3Url = spaceImage.src;
+
+
+	const bgimages = [
+		`url(${image1Url})`,
+		`url(${image2Url})`,
+		`url(${image3Url})`
+	];
+
+	const random = Math.floor(Math.random() * bgimages.length);
+
+	backgroundDiv.style.backgroundImage = bgimages[random];
+	backgroundDiv.style.backgroundSize = "cover";
+	backgroundDiv.style.backgroundPosition = "center";
+	backgroundDiv.style.backgroundRepeat = "no-repeat";
+
+	backgroundDown.style.backgroundImage = bgimages[random];
+	backgroundDown.style.backgroundSize = "cover";
+	backgroundDown.style.backgroundPosition = "center";
+	backgroundDown.style.backgroundRepeat = "no-repeat";
+	setTimeout(toOriginal,3000);
+}
+
+window.changeBackground = changeBackground; // Expose the function globally for the button
+
+
+</script>
+
+
+</body>
+</html>
