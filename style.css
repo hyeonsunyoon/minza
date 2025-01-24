@@ -20,6 +20,8 @@
   padding: 0;
   box-sizing: border-box;
   font-family: D2Coding;
+  word-break: keep-all;
+  user-select: none;
 }
 
 body {
@@ -132,11 +134,11 @@ label {
 
 #buttons button {
   width: 200px;
-  height: 100px;
+  height: auto;
   margin-left: 200px;
   margin-right: 200px;
-  background: linear-gradient(to bottom, gray, darkgray); /* 회색-진회색 그라디언트 */
-  color: ghostwhite;
+  padding: 30px;
+  color: black;
   font-size: 19px;
   z-index: 10; /* 다른 요소보다 위에 표시되도록 설정 */
   cursor: pointer;

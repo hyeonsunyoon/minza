@@ -16,15 +16,15 @@
 	<div id="layer_speed" class="layer hidden UI">
 		<div id="basicUI_Speed">
 			<div id="ground"></div> <!-- 땅 -->
-				<p id="characterSpeaking">I know right ?!?!?</p>
+				<p id="characterSpeaking">아 내말이 ~!~!!</p>
 			</div>
 			<div id="inspector">
 				<p id="speed">현재 속도<br><span id="speedValue">100</span>mm/s</p>
-				<p id="description">The turtle is feeling <span id="status">happy</span>...</p>
+				<p id="description">자라는 '<span id="status">happy</span>' 하다고 느낀다...</p>
 			</div>
 			<div id="buttons">
-				<button id="slowDown" onclick="changeSpeed('slow down')">Why don’t you slow down?</button>
-				<button id="speedUp" onclick="changeSpeed('speed up')">Wow! You so fast!</button>
+				<button id="slowDown" onclick="changeSpeed('slow down')">좀만 천천히 가는게 어때?</button>
+				<button id="speedUp" onclick="changeSpeed('speed up')">우와! 너 진짜 빠르다~ 멋져...</button>
 			</div>
 		</div>
 	</div>
@@ -33,12 +33,12 @@
 		<div id="basicUI_Route">
 			<div id="road"></div>
 			<div id="sky"></div>
-			<p id="progressingMessage">Re-searching the route</p>
-			<p id="debugPort">You just clicked the button</p>
+			<p id="progressingMessage">경로를 이탈하였습니다. 경로를 재탐색합니다.</p>
+			<p id="debugPort">최고의 네비게이션! <br> 최단 루트로 목적지까지 안내합니다.</p>
 		</div>
 		<div id="risky">
-			<button onclick="changeBackground()" id="detour">Detour</button>
-			<p id="warnMessage">WARNING! If you click this button, the ETA will be uncalculatable.</p>
+			<button onclick="changeBackground()" id="detour">이탈하기</button>
+			<p id="warnMessage">주의! 위의 버튼을 누르면 도착 예상시간이 무한대로 발산합니다.</p>
 		</div>
 	</div>
 
@@ -46,11 +46,11 @@
 		<div id="radios">
 			<p id="mode_select">모드를 선택하세요.</p>
 			<label id="speedLabel">
-				<input type="radio" name="mode" id="speedRadio" value="Speed" /> Speed
+				<input type="radio" name="mode" id="speedRadio" value="Speed" /> 속도
 			</label>
 			<br>
 			<label id="routeLabel">
-				<input type="radio" name="mode" id="routeRadio" value="Route" /> Route
+				<input type="radio" name="mode" id="routeRadio" value="Route" /> 경로
 			</label>
 		</div>
 		<div id="character"></div> <!-- 타원 (자라 캐릭터 단순화) -->
@@ -72,6 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const routeInput = document.getElementById('routeRadio');
     const speedLabel = document.getElementById('speedLabel');
     const routeLabel = document.getElementById('routeLabel');
+    const modeSelect = document.getElementById('mode_select');
 
 
 	// 초기 상태 설정 (Speed 선택)
@@ -86,6 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			layerRoute.style.display = "none";
 			speedLabel.style.color = 'black';
 			routeLabel.style.color = 'black';
+			modeSelect.style.color = 'black';
 		}
 	});
 
@@ -95,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			layerRoute.style.display = "block";
 			speedLabel.style.color = 'white';
 			routeLabel.style.color = 'white';
+			modeSelect.style.color = 'white';
 		}
 	});
 
@@ -208,8 +211,8 @@ function smoothTransition() {
 
 function changeSpeed(action) {
     if (action === "slow down") {
-        if (speed > 50) {
-            targetSpeed -= 10;
+        if (speed > 1) {
+            targetSpeed -= 1;
             smoothTransition();
             localStorage.clickcount = 0;
             // document.getElementById("result").innerHTML = "";
