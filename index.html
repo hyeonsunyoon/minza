@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>chill..</title>
+	<title>민첩한 chill...라</title>
 	<link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -19,7 +19,7 @@
 				<p id="characterSpeaking">I know right ?!?!?</p>
 			</div>
 			<div id="inspector">
-				<p id="speed">Current Speed: <span id="speedValue">100</span></p>
+				<p id="speed">현재 속도<br><span id="speedValue">100</span>mm/s</p>
 				<p id="description">The turtle is feeling <span id="status">happy</span>...</p>
 			</div>
 			<div id="buttons">
@@ -44,6 +44,7 @@
 
 	<div id="select" class="UI">
 		<div id="radios">
+			<p id="mode_select">모드를 선택하세요.</p>
 			<label id="speedLabel">
 				<input type="radio" name="mode" id="speedRadio" value="Speed" /> Speed
 			</label>
@@ -108,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Speed Radio
 
-let speed = 10; // Current speed
+let speed = 100; // Current speed
 let targetSpeed = speed; // Target speed to reach
 const statuses = ["fine", "meh", "nice", "burning out"];
 let intervalId; // For smooth transition
@@ -126,6 +127,7 @@ document.getElementById('status').innerHTML = statuses[0];
 setInterval(() => {
     isRed = !isRed;
     speedText.style.color = isRed ? 'red' : 'black';
+    status.style.color = isRed? 'red' : 'black';
 }, 500);
 
 
@@ -144,9 +146,9 @@ function clickCounter() {
 
 
 function statusCalc() {
-    if (speed < 30) return 0;
-    if (speed < 60) return 1;
-    if (speed < 100) return 2;
+    if (speed < 100) return 0;
+    if (speed < 500) return 1;
+    if (speed < 1000) return 2;
     return 3;
 }
 
@@ -183,6 +185,13 @@ function smoothTransition() {
             const currentStatus = statusCalc();
             const bgColor = getBackgroundColor(currentStatus);
             const turtle = document.getElementById('character');
+
+			if (currentStatus === 3) {
+				turtle.classList.add("shake"); // 애니메이션 추가
+			} else {
+				turtle.classList.remove("shake"); // 애니메이션 제거
+			}
+
             if (turtle.style.backgroundColor !== bgColor) {
                 turtle.style.backgroundColor = bgColor;
                 document.getElementById('status').innerHTML = statuses[currentStatus];
@@ -199,8 +208,8 @@ function smoothTransition() {
 
 function changeSpeed(action) {
     if (action === "slow down") {
-        if (speed > 1) {
-            targetSpeed -= 1;
+        if (speed > 50) {
+            targetSpeed -= 10;
             smoothTransition();
             localStorage.clickcount = 0;
             // document.getElementById("result").innerHTML = "";
@@ -218,7 +227,7 @@ function changeSpeed(action) {
 
 function factorial(n) {
     if (n <= 1) return 1;
-    return n * factorial(n - 1);
+    return Math.ceil(n * factorial(n - 1) / 10);
 }
 
 
@@ -233,6 +242,7 @@ const button = document.getElementById("detour");
 const appleText = document.getElementById("progressingMessage");
 
 const image = document.getElementById('character');
+
 
 
 

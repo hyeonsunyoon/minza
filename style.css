@@ -1,7 +1,25 @@
+@font-face {
+    font-family: 'D2Coding';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_three@1.0/D2Coding.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@keyframes shake {
+  0%, 100% { translate:0; }
+  25% { translate: 8px 0; }
+  75% { translate: -8px 0; }
+}
+
+.shake {
+  animation: shake 0.1s infinite;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: D2Coding;
 }
 
 body {
@@ -23,16 +41,20 @@ img {
   margin: 30px;
 }
 
+#mode_select {
+  font-size: 24px;
+}
+
 #select input[type="radio"] {
-  height: 30px;
-  width: 30px;
+  height: 50px;
+  width: 50px;
   margin: 10px;
   top: 20px; /* 화면 위에서 20px 아래 위치 */  
   left: 20px; /* 화면 왼쪽에서 20px 오른쪽 위치 */
 }
 
 label {
-  font-size: 30px;
+  font-size: 50px;
 }
 
 #character {
@@ -42,10 +64,13 @@ label {
   transform: translateX(-50%); /* 가로 방향 중앙 정렬 */
   width: 170px; /* 타원의 너비 */
   height: 80px; /* 타원의 높이 */
-  background-color: whitesmoke; /* 배경색 (자라 캐릭터 색상) */
+  background-color: MediumAquamarine; /* 배경색 (자라 캐릭터 색상) */
   border-radius: 50%; /* 타원 형태로 만들기 */
 }
 
+#status {
+  transition: color 0.3s ease-in-out;
+}
 
 /*layer speed from here*/
 
@@ -85,7 +110,8 @@ label {
   top: 20px; /* 화면 상단에서 20px */
   right: 20px; /* 화면 오른쪽에서 20px */
   text-align: right; /* 글자 오른쪽 정렬 */
-  font-size: 24px; /* 글자 크기 */
+  font-size: 40px; /* 글자 크기 */
+  transition: color 0.3s ease-in-out;
 }
 
 #description {
